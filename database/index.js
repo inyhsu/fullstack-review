@@ -20,9 +20,11 @@ module.exports = {
     // This function should save a repo or repos to
     // the MongoDB
     Repo.create(repo, (err, repo) => {
-      if(err) return console.error(err);
-      console.log('Saved?!', repo)
-      callback(repo);
+      if(err){
+        callback(err)
+      }else{
+        callback(repo);
+      }
     })
   },
 

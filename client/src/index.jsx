@@ -13,7 +13,7 @@ class App extends React.Component {
     }
     this.get = this.get.bind(this);
     this.search = this.search.bind(this);
-    this.showData = this.showData.bind(this);
+
   }
 
   componentDidMount(){
@@ -23,18 +23,18 @@ class App extends React.Component {
   search (term) {
     console.log(`${term} was searched`);
     // TODO
-    axios.post('/repos', {username: term})
-    .then(res => {
-      this.get();
+    $.post('/repos', {username: term} ,(res)=>{
+      console.log('in client', res);
+      this.componentDidMount();
     })
-    .catch(err => console.log(err))
+
   }
 
   get(){
-    axios.get('/repos')
-    .then(res => {
-      let data =res.data
-      data.sort(function(a, b) {
+    $.get('/repos', (res) => {
+      console.log(res);
+        let data =res
+        data.sort(function(a, b) {
         var countA = a.forks_count
         var countB = b.forks_count
         if (countA < countB) {
@@ -51,17 +51,12 @@ class App extends React.Component {
         repos: data
       })
     })
-    .catch(err => console.log(err))
-  }
-
-  showData(){
-    return this.state.repos
   }
 
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.showData()}/>
+      <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search.bind(this)}/>
     </div>)
   }

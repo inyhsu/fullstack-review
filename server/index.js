@@ -12,24 +12,22 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.post('/repos', function (req, res) {
   console.log(req.body.username);
   let username = req.body.username
-  helpers.getReposByUsername(username, (res)=>{
-    res = JSON.parse(res);
-    console.log('res from Github API: ', typeof res);
-    res.map( res => {
+  helpers.getReposByUsername(username, (data)=>{
+    data = JSON.parse(data);
 
+    data.map( data => {
       let save = {
-        id: res.id,
+        id: data.id,
         owner_login: username,
-        name: res.name,
-        html_url: res.html_url,
-        description: res.description,
-        forks_count: res.forks_count
+        name: data.name,
+        html_url: data.html_url,
+        description: data.description,
+        forks_count: data.forks_count
       }
-
-      console.log('data to be save', save);
 
       db.save(save, (results) => {
         console.log(results);
+        res.end();
       })
     })
 
@@ -40,7 +38,7 @@ app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
   db.get((results) => {
-    console.log(results);
+    // console.log(results);
     res.json(results);
   })
 
